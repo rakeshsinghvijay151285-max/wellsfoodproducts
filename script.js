@@ -172,6 +172,12 @@ document.addEventListener('DOMContentLoaded', function(){
   // Contact form handling
   const form = document.getElementById('contactForm');
   const sendWhatsAppBtn = document.getElementById('sendWhatsApp');
+  const defaultWhatsAppMessage = 'I would like to discuss distributorship. Please share the quotation.';
+
+  function openWhatsAppWithMessage(message = defaultWhatsAppMessage) {
+    const url = `https://wa.me/919510067871?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank');
+  }
 
   if(form){
     form.addEventListener('submit', function(e){ e.preventDefault(); if(!form.checkValidity()){ form.reportValidity(); return; } alert('Form validated. Use WhatsApp button to send enquiry via WhatsApp.'); form.reset(); });
@@ -179,17 +185,16 @@ document.addEventListener('DOMContentLoaded', function(){
 
   if(sendWhatsAppBtn){
     sendWhatsAppBtn.addEventListener('click', ()=>{
-      const name = encodeURIComponent(document.getElementById('fullName').value||'');
-      const mobile = encodeURIComponent(document.getElementById('mobile').value||'');
-      const email = encodeURIComponent(document.getElementById('email').value||'');
-      const city = encodeURIComponent(document.getElementById('city').value||'');
-      const type = encodeURIComponent(document.getElementById('enquiryType').value||'');
-      const msg = encodeURIComponent(document.getElementById('message').value||'');
-      const text = `Name: ${name}%0AContact: ${mobile}%0AEmail: ${email}%0ACity: ${city}%0AEnquiry: ${type}%0AMessage: ${msg}`;
-      const url = `https://wa.me/919510067871?text=${text}`;
-      window.open(url,'_blank');
+      openWhatsAppWithMessage(defaultWhatsAppMessage);
     });
   }
+
+  document.querySelectorAll('a[href*="wa.me"]').forEach(link => {
+    link.addEventListener('click', function(e){
+      e.preventDefault();
+      openWhatsAppWithMessage(defaultWhatsAppMessage);
+    });
+  });
 
   // Enquire buttons prefilling enquiry type
   const enquiryTypeField = document.getElementById('enquiryType');

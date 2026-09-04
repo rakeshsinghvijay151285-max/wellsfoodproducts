@@ -33,13 +33,29 @@ document.addEventListener('DOMContentLoaded', function(){
   });
 
   // Mobile menu
+  function updateNavDisplay(){
+    if(window.innerWidth > 1024){
+      nav.style.display = 'block';
+      nav.classList.remove('is-open');
+      hamburger.setAttribute('aria-expanded', 'false');
+      return;
+    }
+
+    const expanded = hamburger.getAttribute('aria-expanded') === 'true';
+    nav.style.display = expanded ? 'block' : 'none';
+    nav.classList.toggle('is-open', expanded);
+  }
+
   function toggleMobileMenu(){
-    const expanded = hamburger.getAttribute('aria-expanded')==='true';
-    hamburger.setAttribute('aria-expanded', !expanded);
-    nav.style.display = expanded? 'none':'block';
+    if(window.innerWidth > 1024) return;
+    const expanded = hamburger.getAttribute('aria-expanded') === 'true';
+    hamburger.setAttribute('aria-expanded', String(!expanded));
+    nav.style.display = expanded ? 'none' : 'block';
+    nav.classList.toggle('is-open', !expanded);
   }
   hamburger.addEventListener('click', toggleMobileMenu);
-  window.addEventListener('resize', ()=>{ if(window.innerWidth>1024) nav.style.display='block'; else nav.style.display='none' });
+  window.addEventListener('resize', updateNavDisplay);
+  updateNavDisplay();
 
   // Back to top
   backToTop.addEventListener('click', ()=>window.scrollTo({top:0,behavior:'smooth'}));
@@ -48,20 +64,29 @@ document.addEventListener('DOMContentLoaded', function(){
   function SimpleSlider(containerSelector, opts={}){
     const root = document.querySelector(containerSelector);
     if(!root) return;
-    const slidesEl = root.querySelector('.slides');
-    const slides = Array.from(root.querySelectorAll('.slide'));
+
+    const trackSelector = opts.trackSelector || '.slides';
+    const itemSelector = opts.itemSelector || '.slide';
+    const dotsSelector = opts.dotsSelector || '.dots';
+    const track = root.querySelector(trackSelector);
+    const items = Array.from(root.querySelectorAll(itemSelector));
     const prev = root.querySelector('.prev');
     const next = root.querySelector('.next');
-    const dots = root.querySelector('.dots');
-    let index = 0; let playing=true; const interval = opts.interval||4000;
+    const dots = dotsSelector ? root.querySelector(dotsSelector) : null;
+    if(!track || items.length === 0) return;
+
+    let index = 0; let playing = opts.autoPlay !== false; const interval = opts.interval || 4000;
 
     function renderDots(){
       if(!dots) return;
       dots.innerHTML='';
-      slides.forEach((s,i)=>{const btn=document.createElement('button'); if(i===0) btn.classList.add('active'); btn.addEventListener('click',()=>goTo(i)); dots.appendChild(btn)});
+      items.forEach((s,i)=>{const btn=document.createElement('button'); if(i===0) btn.classList.add('active'); btn.addEventListener('click',()=>goTo(i)); dots.appendChild(btn)});
     }
-    function update(){ slidesEl.style.transform = `translateX(-${index*100}%)`; Array.from(dots.children||[]).forEach((b,i)=>b.classList.toggle('active',i===index)); }
-    function goTo(i){ index=(i+slides.length)%slides.length; update(); }
+    function update(){
+      track.style.transform = `translateX(-${index*100}%)`;
+      if(dots){ Array.from(dots.children||[]).forEach((b,i)=>b.classList.toggle('active',i===index)); }
+    }
+    function goTo(i){ index=(i+items.length)%items.length; update(); }
     function nextSlide(){ goTo(index+1); }
     function prevSlide(){ goTo(index-1); }
     if(next) next.addEventListener('click', ()=>{ nextSlide(); restart(); });
@@ -77,10 +102,10 @@ document.addEventListener('DOMContentLoaded', function(){
   }
 
   // Initialize hero slider
-  SimpleSlider('#heroSlider',{interval:4500});
+  SimpleSlider('#heroSlider',{interval:4500, trackSelector:'.slides', itemSelector:'.slide', dotsSelector:'.dots'});
 
   // Testimonials slider
-  SimpleSlider('#testSlider',{interval:5500});
+  SimpleSlider('#testSlider',{interval:5500, trackSelector:'.test-slides', itemSelector:'.test', dotsSelector:null});
 
   // Allow clicking hero/slider images to open in lightbox
   document.querySelectorAll('.slide img').forEach(img=>{
@@ -131,27 +156,44 @@ document.addEventListener('DOMContentLoaded', function(){
 
   // Lazy load images with data-src
   const lazyImgs = document.querySelectorAll('img.lazy');
-  const io = new IntersectionObserver(entries=>{ entries.forEach(ent=>{ if(ent.isIntersecting){ const img = ent.target; img.src = img.dataset.src; img.classList.remove('lazy'); io.unobserve(img); } }) },{rootMargin:'200px'});
+  const io = new IntersectionObserver(entries=>{
+    entries.forEach(ent=>{
+      if(ent.isIntersecting){
+        const img = ent.target;
+        const src = img.dataset.src || img.getAttribute('src');
+        if(src){ img.src = src; }
+        img.classList.remove('lazy');
+        io.unobserve(img);
+      }
+    });
+  }, {rootMargin:'200px'});
   lazyImgs.forEach(i=>io.observe(i));
 
   // Contact form handling
   const form = document.getElementById('contactForm');
   const sendWhatsAppBtn = document.getElementById('sendWhatsApp');
-  form.addEventListener('submit', function(e){ e.preventDefault(); if(!form.checkValidity()){ form.reportValidity(); return; } alert('Form validated. Use WhatsApp button to send enquiry via WhatsApp.'); form.reset(); });
-  sendWhatsAppBtn.addEventListener('click', ()=>{
-    const name = encodeURIComponent(document.getElementById('fullName').value||'');
-    const mobile = encodeURIComponent(document.getElementById('mobile').value||'');
-    const email = encodeURIComponent(document.getElementById('email').value||'');
-    const city = encodeURIComponent(document.getElementById('city').value||'');
-    const type = encodeURIComponent(document.getElementById('enquiryType').value||'');
-    const msg = encodeURIComponent(document.getElementById('message').value||'');
-    const text = `Name: ${name}%0AContact: ${mobile}%0AEmail: ${email}%0ACity: ${city}%0AEnquiry: ${type}%0AMessage: ${msg}`;
-    const url = `https://wa.me/919510067871?text=${text}`;
-    window.open(url,'_blank');
-  });
+
+  if(form){
+    form.addEventListener('submit', function(e){ e.preventDefault(); if(!form.checkValidity()){ form.reportValidity(); return; } alert('Form validated. Use WhatsApp button to send enquiry via WhatsApp.'); form.reset(); });
+  }
+
+  if(sendWhatsAppBtn){
+    sendWhatsAppBtn.addEventListener('click', ()=>{
+      const name = encodeURIComponent(document.getElementById('fullName').value||'');
+      const mobile = encodeURIComponent(document.getElementById('mobile').value||'');
+      const email = encodeURIComponent(document.getElementById('email').value||'');
+      const city = encodeURIComponent(document.getElementById('city').value||'');
+      const type = encodeURIComponent(document.getElementById('enquiryType').value||'');
+      const msg = encodeURIComponent(document.getElementById('message').value||'');
+      const text = `Name: ${name}%0AContact: ${mobile}%0AEmail: ${email}%0ACity: ${city}%0AEnquiry: ${type}%0AMessage: ${msg}`;
+      const url = `https://wa.me/919510067871?text=${text}`;
+      window.open(url,'_blank');
+    });
+  }
 
   // Enquire buttons prefilling enquiry type
-  document.querySelectorAll('.enquire').forEach(btn=>btn.addEventListener('click', function(){ const type = this.dataset.enquiry||'Product Enquiry'; document.getElementById('enquiryType').value = type; }));
+  const enquiryTypeField = document.getElementById('enquiryType');
+  document.querySelectorAll('.enquire').forEach(btn=>btn.addEventListener('click', function(){ const type = this.dataset.enquiry||'Product Enquiry'; if(enquiryTypeField) enquiryTypeField.value = type; }));
 
   // Prevent horizontal overflow
   document.documentElement.style.overflowY='scroll';

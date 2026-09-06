@@ -142,7 +142,15 @@ section:nth-of-type(odd){background:linear-gradient(180deg, rgba(255,255,255,.15
 .faq-item h3{margin:0 0 10px;color:var(--dark-green);font-size:1.1rem}
 .faq-item p{margin:0;color:var(--dark-text);line-height:1.7}
 
-.product-page-hero{padding:80px 0 40px;background:linear-gradient(135deg, rgba(18,55,42,.96), rgba(18,55,42,.82));color:var(--white)}
+.product-page-hero{
+  padding:80px 0 40px;
+  color:var(--white);
+  background-color:#e9dcc0;
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+  background-attachment:scroll;
+}
 .product-page-inner{display:grid;grid-template-columns:1.2fr .8fr;align-items:center;gap:28px}
 .product-page-copy h1{font-size:42px;max-width:620px}
 .product-page-card{background:rgba(255,255,255,.04);padding:18px;border-radius:16px;box-shadow:0 12px 28px rgba(0,0,0,.15)}
@@ -165,6 +173,8 @@ section:nth-of-type(odd){background:linear-gradient(180deg, rgba(255,255,255,.15
 .footer-inner{display:flex;gap:20px;align-items:flex-start}
 .footer-cols{display:flex;gap:24px;margin-left:auto}
 .footer-cols h4{color:var(--white)}
+.footer-cols>div:nth-child(2){min-width:125px}
+.footer-cols>div:nth-child(2) a{white-space:nowrap}
 .footer-bottom{display:flex;align-items:center;justify-content:center;text-align:center;padding:18px 0;border-top:1px solid rgba(255,255,255,.04)}
 
 #backToTop{position:fixed;right:18px;bottom:90px;background:var(--dark-green);color:var(--light-gold);border:0;padding:10px 12px;border-radius:8px;display:none}

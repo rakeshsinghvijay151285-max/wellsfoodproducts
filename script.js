@@ -6,6 +6,35 @@ document.addEventListener('DOMContentLoaded', function(){
   const backToTop = document.getElementById('backToTop');
   const dotsContainer = document.querySelector('.slider .dots');
 
+  const videoWelcome = document.getElementById('videoWelcome');
+  const welcomeVideo = videoWelcome ? videoWelcome.querySelector('video') : null;
+  const videoWelcomeClose = videoWelcome ? videoWelcome.querySelector('.video-welcome-close') : null;
+  function closeVideoWelcome(){
+    if(!videoWelcome) return;
+    videoWelcome.classList.remove('open');
+    videoWelcome.setAttribute('aria-hidden','true');
+    document.body.style.overflow = '';
+    if(welcomeVideo) welcomeVideo.pause();
+  }
+  if(videoWelcome){
+    videoWelcome.classList.add('open');
+    videoWelcome.setAttribute('aria-hidden','false');
+    document.body.style.overflow = 'hidden';
+    if(welcomeVideo){
+      welcomeVideo.muted = true;
+      welcomeVideo.play().catch(()=>{});
+    }
+    videoWelcomeClose.addEventListener('click', closeVideoWelcome);
+    welcomeVideo.addEventListener('ended', closeVideoWelcome);
+    welcomeVideo.addEventListener('click', ()=>{
+      welcomeVideo.muted = false;
+      welcomeVideo.play().catch(()=>{});
+    });
+    videoWelcome.addEventListener('click', event=>{
+      if(event.target === videoWelcome) closeVideoWelcome();
+    });
+  }
+
   // Sticky header background
   function onScroll(){
     if(window.scrollY>40) header.classList.add('scrolled'); else header.classList.remove('scrolled');
@@ -152,7 +181,7 @@ document.addEventListener('DOMContentLoaded', function(){
   if(lbNext) lbNext.addEventListener('click', lbNextFn);
   if(lbPrev) lbPrev.addEventListener('click', lbPrevFn);
   lightbox.addEventListener('click', e=>{ if(e.target===lightbox) closeLightbox(); });
-  document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ closeLightbox(); if(hamburger.getAttribute('aria-expanded')==='true') toggleMobileMenu(); } if(e.key==='ArrowRight') lbNextFn(); if(e.key==='ArrowLeft') lbPrevFn(); });
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ closeLightbox(); closeVideoWelcome(); if(hamburger.getAttribute('aria-expanded')==='true') toggleMobileMenu(); } if(e.key==='ArrowRight') lbNextFn(); if(e.key==='ArrowLeft') lbPrevFn(); });
 
   // Lazy load images with data-src
   const lazyImgs = document.querySelectorAll('img.lazy');

@@ -266,6 +266,20 @@
           <button class="gallery-item" data-src="gallery-5.jpeg"><img src="gallery-5.jpeg" alt="Gallery 5" loading="lazy"></button>
           <button class="gallery-item" data-src="gallery-6.png"><img src="gallery-6.png" alt="Gallery 6" loading="lazy"></button>
         </div>
+        <div class="video-gallery" aria-label="Wells video gallery">
+          <h3>Wells in Motion</h3>
+          <div class="video-gallery-grid">
+            <article class="video-card">
+              <video src="video1.mp4" controls preload="metadata" playsinline aria-label="Wells video 1"></video>
+            </article>
+            <article class="video-card">
+              <video src="video2.mp4" controls preload="metadata" playsinline aria-label="Wells video 2"></video>
+            </article>
+            <article class="video-card">
+              <video src="video3.mp4" controls preload="metadata" playsinline aria-label="Wells video 3"></video>
+            </article>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -473,6 +487,11 @@
     <button class="lb-prev" aria-label="Previous">‹</button>
     <img class="lb-image" alt="Expanded image">
     <button class="lb-next" aria-label="Next">›</button>
+  </div>
+
+  <div id="videoWelcome" class="video-welcome" aria-hidden="true" role="dialog" aria-label="Wells featured video">
+    <button class="video-welcome-close" type="button" aria-label="Close video">×</button>
+    <video src="video1.mp4" autoplay muted playsinline controls preload="auto" aria-label="Featured Wells video"></video>
   </div>
 
   <script src="script.js" defer></script>

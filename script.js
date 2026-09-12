@@ -112,7 +112,8 @@ document.addEventListener('DOMContentLoaded', function(){
       items.forEach((s,i)=>{const btn=document.createElement('button'); if(i===0) btn.classList.add('active'); btn.addEventListener('click',()=>goTo(i)); dots.appendChild(btn)});
     }
     function update(){
-      track.style.transform = `translateX(-${index*100}%)`;
+      const direction = opts.vertical ? 'Y' : 'X';
+      track.style.transform = `translate${direction}(-${index*100}%)`;
       if(dots){ Array.from(dots.children||[]).forEach((b,i)=>b.classList.toggle('active',i===index)); }
     }
     function goTo(i){ index=(i+items.length)%items.length; update(); }
@@ -123,8 +124,12 @@ document.addEventListener('DOMContentLoaded', function(){
     root.addEventListener('mouseenter', ()=>playing=false);
     root.addEventListener('mouseleave', ()=>playing=true);
     // touch
-    let startX=0; root.addEventListener('touchstart',e=>startX=e.touches[0].clientX);
-    root.addEventListener('touchend',e=>{const dx=(e.changedTouches[0].clientX-startX); if(Math.abs(dx)>40){ if(dx<0) nextSlide(); else prevSlide(); restart(); }});
+    let startX=0; let startY=0;
+    root.addEventListener('touchstart',e=>{startX=e.touches[0].clientX; startY=e.touches[0].clientY;});
+    root.addEventListener('touchend',e=>{
+      const distance = opts.vertical ? e.changedTouches[0].clientY-startY : e.changedTouches[0].clientX-startX;
+      if(Math.abs(distance)>40){ if(distance<0) nextSlide(); else prevSlide(); restart(); }
+    });
     renderDots(); update();
     let timer = setInterval(()=>{ if(playing) nextSlide(); }, interval);
     function restart(){ clearInterval(timer); timer=setInterval(()=>{ if(playing) nextSlide(); }, interval); }
@@ -134,7 +139,7 @@ document.addEventListener('DOMContentLoaded', function(){
   SimpleSlider('#heroSlider',{interval:4500, trackSelector:'.slides', itemSelector:'.slide', dotsSelector:'.dots'});
 
   // Testimonials slider
-  SimpleSlider('#testSlider',{interval:5500, trackSelector:'.test-slides', itemSelector:'.test', dotsSelector:null});
+  SimpleSlider('#testSlider',{interval:5500, trackSelector:'.test-slides', itemSelector:'.test', dotsSelector:null, vertical:true});
 
   // Allow clicking hero/slider images to open in lightbox
   document.querySelectorAll('.slide img').forEach(img=>{

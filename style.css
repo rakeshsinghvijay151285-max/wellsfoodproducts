@@ -198,7 +198,10 @@ section.ratings{background:linear-gradient(110deg,var(--dark-green),var(--deep-t
 .cta-inner{display:flex;align-items:center;justify-content:space-between;gap:18px;background:linear-gradient(90deg, rgba(201,162,39,.12), rgba(255,255,255,.8));padding:26px 30px;border-radius:16px;border:1px solid rgba(201,162,39,.15)}
 
 .contact-inner{display:flex;gap:30px}
-.contact-left{flex:1}
+.contact-left{flex:1;display:flex;align-items:flex-start;gap:28px}
+.contact-content{flex:1}
+.contact-youtube{display:flex;align-items:center;justify-content:center;flex:0 0 96px;width:96px;height:96px;margin-top:8px;color:#D92B2B;font-size:4rem;text-decoration:none;border-radius:22px;transition:color .2s ease,background .2s ease,transform .2s ease}
+.contact-youtube:hover{color:#B51F1F;background:rgba(217,43,43,.09);transform:translateY(-3px)}
 .contact-form{flex:1;background:var(--white);padding:18px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.06)}
 .contact-form label{display:block;margin-top:10px;font-weight:600}
 .contact-form input,.contact-form select,.contact-form textarea{width:100%;padding:10px;margin-top:6px;border-radius:8px;border:1px solid #ddd}
@@ -235,6 +238,6 @@ section.ratings{background:linear-gradient(110deg,var(--dark-green),var(--deep-t
   .header-cta .btn{padding:11px 16px;font-size:.9rem}
   .socials a{width:48px;height:48px;font-size:1.6rem}
 }
-@media(max-width:480px){h1{font-size:28px}.gallery-grid,.video-gallery-grid{grid-template-columns:1fr}.about-inner{flex-direction:column}.ratings-inner{flex-direction:column;align-items:stretch}.rating-summary{min-width:0}.contact-inner{flex-direction:column}#backToTop{bottom:78px}.video-welcome{padding:12px}.video-welcome video{max-height:calc(100vh - 24px)}.video-welcome-close{top:10px;right:10px}}
+@media(max-width:480px){h1{font-size:28px}.gallery-grid,.video-gallery-grid{grid-template-columns:1fr}.about-inner{flex-direction:column}.ratings-inner{flex-direction:column;align-items:stretch}.contact-inner{flex-direction:column}.contact-left{gap:16px}.contact-youtube{flex-basis:72px;width:72px;height:72px;font-size:3rem}#backToTop{bottom:78px}.video-welcome{padding:12px}.video-welcome video{max-height:calc(100vh - 24px)}.video-welcome-close{top:10px;right:10px}}
 
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}

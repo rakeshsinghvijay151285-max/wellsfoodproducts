@@ -36,6 +36,7 @@ a{color:inherit}
 .site-nav a:hover,.site-nav a.active{color:var(--dark-green);background:rgba(18,55,42,.03);border-color:rgba(18,55,42,.06)}
 .site-nav a:hover::after,.site-nav a.active::after{transform:scaleX(1);opacity:1}
 .header-cta{display:flex;align-items:center;gap:12px;margin-left:auto}
+.header-cta-stack{display:flex;flex-direction:column;align-items:stretch;gap:8px}
 .header-cta .btn{padding:15px 24px;font-size:1rem}
 .socials{display:flex;align-items:center}
 .socials a{display:flex;align-items:center;justify-content:center;width:60px;height:60px;color:#D92B2B;font-size:2rem;text-decoration:none;border-radius:50%;transition:color .2s ease,background .2s ease,transform .2s ease}

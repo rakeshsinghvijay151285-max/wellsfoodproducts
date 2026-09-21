@@ -35,19 +35,27 @@ document.addEventListener('DOMContentLoaded', function(){
     });
   }
 
-  // Sticky header background
-  function onScroll(){
+  // Sticky header background and active navigation
+  const scrollLinks = Array.from(document.querySelectorAll('[data-scroll]'));
+  const scrollTargets = scrollLinks.map(link=>document.querySelector(link.getAttribute('href')));
+  let scrollFrame = 0;
+  function updateOnScroll(){
+    scrollFrame = 0;
     if(window.scrollY>40) header.classList.add('scrolled'); else header.classList.remove('scrolled');
     backToTop.style.display = window.scrollY>400? 'block':'none';
     // Active nav highlight
-    document.querySelectorAll('[data-scroll]').forEach(a=>{
-      const target = document.querySelector(a.getAttribute('href'));
+    scrollLinks.forEach((a,index)=>{
+      const target = scrollTargets[index];
       if(!target) return;
       const rect = target.getBoundingClientRect();
       if(rect.top<=120 && rect.bottom>120) a.classList.add('active'); else a.classList.remove('active');
     });
   }
-  onScroll(); window.addEventListener('scroll', onScroll, {passive:true});
+  function onScroll(){
+    if(scrollFrame) return;
+    scrollFrame = requestAnimationFrame(updateOnScroll);
+  }
+  updateOnScroll(); window.addEventListener('scroll', onScroll, {passive:true});
 
   // Smooth scroll for internal links
   document.querySelectorAll('[data-scroll]').forEach(link=>{
